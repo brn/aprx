@@ -1,15 +1,17 @@
 {
   "name": "aprx",
-  "version": "0.0.0",
-  "description": "Operationable promise implementation",
-  "main": "lib/index.js",
+  "version": "0.1.0",
+  "description": "Proxied wrapper object for Promise.",
+  "main": "./index.js",
+  "types": "./lib/development/index.d.ts",
   "scripts": {
     "lint": "tslint 'src/**/*' -c ./tslint.json --exclude 'src/**/*.{css,css.d.ts}' --project tsconfig.json",
     "lint:fix": "tslint 'src/**/*' -c ./tslint.json --exclude 'src/**/*.{css,css.d.ts}' --project tsconfig.json --fix",
     "run-jest": "NODE_ENV=debug jest --setupTestFrameworkScriptFile='./scripts/vendor-register.js'",
     "test": "run-s run-jest",
     "prebuild": "rimraf lib",
-    "build": "ts-node -O '{\"module\": \"commonjs\"}' ./scripts/build.ts"
+    "build": "ts-node -O '{\"module\": \"commonjs\"}' ./scripts/build.ts",
+    "prepublish": "run-s build"
   },
   "keywords": [
     "promise",
