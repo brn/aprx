@@ -1,0 +1,53 @@
+#!/bin/sh
+
+
+# Copy screenshot to master.
+git rm -f vt/screenshots/master/* > /dev/null
+cp vt/screenshots/current/* vt/screenshots/master
+touch vt/screenshots/master/.master
+
+git add vt/screenshots/master
+
+TSLINT=./node_modules/.bin/tslint
+PRETTIER=./node_modules/.bin/prettier
+PRESUBMIT_CHECKED_DIR=.presubmit-checked-list
+mkdir -p $PRESUBMIT_CHECKED_DIR
+
+which $TSLINT > /dev/null | exit 1
+which $PRETTIER > /dev/null | exit 1
+
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '\.tsx\?$' | tr '\n' ' ');
+
+for file in $FILES
+do
+  if [ $(echo $file | grep '.d.ts') ]; then
+    continue;
+  fi
+
+  FILEKEY=${file//\//-}
+
+  if [ -e $PRESUBMIT_CHECKED_DIR/$FILEKEY ]; then
+    continue
+  fi
+
+  echo "prettier ./$file";
+
+  # Prettify staged .ts files
+  $PRETTIER ./$file --write;
+
+  echo "lint ./$file";
+  if [[ $file == *"vt/"* ]]; then
+    cd vt
+    ../$TSLINT ./$file -c ./tslint.json -p . --fix;
+    cd ../
+  else
+    $TSLINT ./$file -c ./tslint.json --exclude './src/**/*.css' -p ./ --fix;
+  fi
+  if [ $? -ne 0 ];then
+    exit 1;
+  fi
+  touch $PRESUBMIT_CHECKED_DIR/$FILEKEY
+  # Add back the modified/prettified files to staging
+  git add $file
+
+done

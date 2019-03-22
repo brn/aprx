@@ -1,0 +1,81 @@
+{
+  "name": "aprx",
+  "version": "0.0.0",
+  "description": "Operationable promise implementation",
+  "main": "lib/index.js",
+  "scripts": {
+    "lint": "tslint 'src/**/*' -c ./tslint.json --exclude 'src/**/*.{css,css.d.ts}' --project tsconfig.json",
+    "lint:fix": "tslint 'src/**/*' -c ./tslint.json --exclude 'src/**/*.{css,css.d.ts}' --project tsconfig.json --fix",
+    "run-jest": "NODE_ENV=debug jest --setupTestFrameworkScriptFile='./scripts/vendor-register.js'",
+    "test": "run-s run-jest",
+    "prebuild": "rimraf lib",
+    "build": "ts-node -O '{\"module\": \"commonjs\"}' ./scripts/build.ts"
+  },
+  "keywords": [
+    "promise",
+    "proxy",
+    "async",
+    "future"
+  ],
+  "author": "Taketoshi Aono",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@types/assert": "^1.4.0",
+    "@types/fs-extra": "^5.0.5",
+    "@types/glob": "^7.1.1",
+    "@types/jest": "^23.3.10",
+    "@types/node": "^10.12.12",
+    "@types/power-assert": "^1.5.0",
+    "assert": "^1.4.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "babel-preset-power-assert": "^3.0.0",
+    "colors": "^1.3.3",
+    "fs-extra": "^7.0.1",
+    "glob": "^7.1.3",
+    "husky": "^1.2.0",
+    "jest": "^23.6.0",
+    "npm-run-all": "^4.1.5",
+    "power-assert": "^1.6.1",
+    "prettier": "^1.15.3",
+    "ts-jest": "^23.10.5",
+    "tslib": "^1.9.3",
+    "tslint": "^5.11.0",
+    "typescript": "^3.3.4000"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "sh ./pre-commit"
+    }
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "babelConfig": {
+          "presets": [
+            "@babel/preset-env",
+            "babel-preset-power-assert"
+          ]
+        }
+      }
+    },
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/(?!flycheck_)(.*?|(\\.|/))(test|spec))\\.ts$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "^aim\\:core-types$": "<rootDir>/src/types.ts",
+      "^aim\\:(.+)$": "<rootDir>/src/$1",
+      "^images": "<rootDir>/src/testing/mocks/image.ts"
+    }
+  }
+}
